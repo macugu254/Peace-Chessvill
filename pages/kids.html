@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kids' Tutorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one friendly column of numbered chapters. Each chapter has one board you can touch. */
+:root{
+  --bg:#f3f6fb; --surface:#ffffff; --fg:#1a2233; --muted:#55627a; --line:#d5dcea;
+  --red:#c8321f; --red-fg:#ffffff; --blue:#2358c4; --sun:#ffd23f; --leaf:#1f8a55;
+  --sq1:#eef2fa; --sq2:#b4c3e0; --mark:#ffd23f; --chk:#f4a49a; --ink:#1a2233; --card:#fff8dc;
+  --head:'Fredoka','Trebuchet MS',system-ui,sans-serif; --body:'Nunito','Segoe UI',system-ui,sans-serif; --mono:'DM Mono',ui-monospace,Menlo,Consolas,monospace;
+  --cell:clamp(52px,17vw,70px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1524; --surface:#18203a; --fg:#eef2fb; --muted:#a6b2cc; --line:#2c3758;
+  --red:#ff7a66; --red-fg:#1a1010; --blue:#8fb0ff; --sun:#ffd23f; --leaf:#55d49a;
+  --sq1:#26304f; --sq2:#3c4a73; --mark:#d9a900; --chk:#8a3a33; --ink:#eef2fb; --card:#2a2f4a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1524; --surface:#18203a; --fg:#eef2fb; --muted:#a6b2cc; --line:#2c3758;
+  --red:#ff7a66; --red-fg:#1a1010; --blue:#8fb0ff; --sun:#ffd23f; --leaf:#55d49a;
+  --sq1:#26304f; --sq2:#3c4a73; --mark:#d9a900; --chk:#8a3a33; --ink:#eef2fb; --card:#2a2f4a; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:18px;line-height:1.55;font-weight:500;
+  padding-block:20px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:720px;margin-inline:auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--head);margin:0;text-wrap:balance;line-height:1.15}
+h1{font-size:clamp(34px,9vw,52px);font-weight:700;letter-spacing:-.01em}
+h1 b{color:var(--red)}
+.lead{font-size:20px;max-width:34em;margin:10px 0 0}
+.badge{display:inline-block;font-family:var(--head);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;background:var(--sun);color:#1a2233;padding:3px 12px;border-radius:99px;margin-bottom:10px}
+.chap{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:20px 18px 22px;display:flex;flex-direction:column;gap:14px}
+.chap h2{font-size:26px;font-weight:600;display:flex;gap:12px;align-items:center}
+.num{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:var(--red);color:var(--red-fg);display:grid;place-items:center;font-size:20px;font-weight:700}
+.chap p{margin:0;max-width:36em}
+.chap h3{font-size:21px;font-weight:600;color:var(--red);margin-top:8px}
+.say{background:var(--card);border-radius:12px;padding:10px 14px;border-left:6px solid var(--sun)}
+.try{font-family:var(--head);font-weight:600;color:var(--blue);margin:0}
+.board{display:grid;grid-template-columns:24px repeat(4,var(--cell));grid-template-rows:24px repeat(4,var(--cell));width:max-content;max-width:100%;touch-action:manipulation}
+.board .lab{display:grid;place-items:center;font-family:var(--mono);font-size:14px;color:var(--muted)}
+.board .bt{grid-column:2/6;grid-row:5;height:24px}
+.sq{position:relative;display:grid;place-items:center;font-size:calc(var(--cell)*.62);line-height:1;cursor:default;user-select:none}
+.sq.a{background:var(--sq1)}.sq.b{background:var(--sq2)}
+.board.tap .sq{cursor:pointer}.board.tap .sq:hover{outline:3px solid var(--blue);outline-offset:-3px}
+.sq.mk::after{content:"";width:34%;height:34%;border-radius:50%;background:var(--mark);position:absolute;box-shadow:0 0 0 3px color-mix(in srgb,var(--mark) 40%,transparent)}
+.sq.mk .pc{position:relative;z-index:1}
+.sq.chk{background:var(--chk)}
+.sq.pick{outline:4px solid var(--red);outline-offset:-4px}
+.sq.good{background:color-mix(in srgb,var(--leaf) 55%,var(--sq1))}.sq.bad{background:var(--chk)}
+.sq .nm{position:absolute;left:4px;bottom:1px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.w{color:#fff;-webkit-text-stroke:1.6px #1a2233;paint-order:stroke fill;text-shadow:0 1px 0 #1a2233}
+.k{color:#101522;-webkit-text-stroke:1px #fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .k{color:#0b0f1a;-webkit-text-stroke:1.4px #fff}}
+:root[data-theme="dark"] .k{color:#0b0f1a;-webkit-text-stroke:1.4px #fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font-family:var(--head);font-weight:600;font-size:18px;padding:9px 18px;border-radius:99px;border:2px solid var(--blue);background:var(--surface);color:var(--blue);cursor:pointer}
+.btn:hover{background:color-mix(in srgb,var(--blue) 12%,var(--surface))}
+.btn.pri{background:var(--red);border-color:var(--red);color:var(--red-fg)}
+.btn.on{background:var(--blue);color:var(--surface)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.stage{font-weight:700;min-height:3.2em;margin:0}
+.hint{font-size:16px;color:var(--muted)}
+.card{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:74px;height:100px;border:3px solid var(--ink);border-radius:10px;background:var(--surface);font-family:var(--mono);gap:2px}
+.card .g{font-size:38px;line-height:1}.card .i{font-size:16px;font-weight:500}
+.card.blk{background:#1a2233;color:#fff;border-color:#1a2233}
+.cards{display:flex;gap:10px;flex-wrap:wrap}
+.parts{display:flex;gap:6px;flex-wrap:wrap;font-family:var(--mono);font-size:17px}
+.parts span{border-radius:8px;padding:2px 10px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;align-items:start}
+.opt{border:2px solid var(--line);border-radius:12px;padding:10px 14px}
+.opt>b:first-child{font-family:var(--head);font-weight:600;color:var(--red);font-size:20px;display:block}
+.quiz .opts{display:flex;gap:10px;flex-wrap:wrap}
+.ok{color:var(--leaf);font-weight:800}.no{color:var(--red);font-weight:800}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px}dt{font-family:var(--head);font-weight:600;color:var(--red)}dd{margin:0}
+.foot{font-size:15px;color:var(--muted);text-align:center}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">Tutorial for kids</span>
+    <h1>chess<b>Vill</b>4</h1>
+    <p class="lead">Can you catch a sneaky king? In chessVill-4 you play with cards on a tiny board. Let's learn it together, one step at a time. You can touch every board on this page.</p>
+  </header>
+
+  <section class="chap" id="c1">
+    <h2><span class="num">1</span>The tiny board</h2>
+    <p>Chess is played on a big board with 64 squares. chessVill-4 uses only one small corner of it: <b>16 squares</b>, 4 across and 4 down.</p>
+    <p>Every square has a name made of <b>a letter and a number</b>. The letters are the columns, called <b>files</b>: h, g, f, e. The numbers are the rows, called <b>ranks</b>: 8, 7, 6, 5.</p>
+    <p class="say">We look at the board from the black king's side, so the corner at the top left is <b>h8</b>.</p>
+    <p class="try">Try it: touch any square to hear its name.</p>
+    <div id="b1"></div>
+    <p class="stage" id="b1t">Touch a square.</p>
+  </section>
+
+  <section class="chap" id="c2">
+    <h2><span class="num">2</span>Meet the cards</h2>
+    <p>There is no board in the real game. You play with <b>cards</b>. Every card has a piece and a square written on it.</p>
+    <div class="row">
+      <div class="card"><span class="g w">&#9819;</span><span class="i">Qh6</span></div>
+      <div class="parts"><span style="background:color-mix(in srgb,var(--red) 22%,transparent)">Q = Queen</span><span style="background:color-mix(in srgb,var(--blue) 22%,transparent)">h = file h</span><span style="background:color-mix(in srgb,var(--sun) 45%,transparent)">6 = rank 6</span></div>
+    </div>
+    <p>So <b>Qh6</b> means "a Queen on square h6". The letters for the pieces are: <b>P</b> pawn, <b>N</b> knight, <b>B</b> bishop, <b>R</b> rook, <b>Q</b> queen and <b>K</b> king.</p>
+    <p>There are two kinds of cards:</p>
+    <div class="two">
+      <div class="opt"><b>White cards</b>Your team. These are pawns, knights, bishops, rooks and queens. You place them to trap the king.</div>
+      <div class="opt"><b>King cards</b><div class="cards" style="margin:6px 0"><div class="card blk"><span class="g">&#9818;</span><span class="i">Kf6</span></div></div>The black king is the one we are hunting. A king card tells you where the king is hiding. You can also play one to make the king jump to a new square.</div>
+    </div>
+  </section>
+
+  <section class="chap" id="c3">
+    <h2><span class="num">3</span>Your team: how the pieces see</h2>
+    <p>Each piece "sees" some squares. If the black king stands on a square a piece can see, the king is in <b>check</b>. Pick a piece and touch the board. The yellow dots show every square it sees.</p>
+    <div class="row" id="pickrow"></div>
+    <div id="b3"></div>
+    <p class="stage" id="b3t"></p>
+    <p class="hint">Pieces cannot see through other pieces. In the real game, cards you have already placed can block the way.</p>
+  </section>
+
+  <section class="chap" id="c4">
+    <h2><span class="num">4</span>Check and checkmate</h2>
+    <p><b>Check</b> means the king is being attacked. A king in check must get out of it. <b>Checkmate</b> means the king is attacked and has nowhere safe to go. That is how you win!</p>
+    <p class="say">The black king never moves on its own. It only moves to answer your cards.</p>
+    <p class="try">Example 1: two queens. Press Next to watch.</p>
+    <div id="s1"></div>
+  </section>
+
+  <section class="chap" id="c5">
+    <h2><span class="num">5</span>What the king does</h2>
+    <p>After each card you place, the king answers by these rules:</p>
+    <dl>
+      <dt>In check?</dt><dd>It must run to a safe square, or eat a card that has no guard.</dd>
+      <dt>Not in check?</dt><dd>It stays where it is. It may only eat an unguarded card next to it.</dd>
+      <dt>Guarded?</dt><dd>A card is guarded when one of your other cards sees its square. The king may never eat a guarded card.</dd>
+    </dl>
+    <p class="try">Example 2: a pawn guards the queen.</p>
+    <div id="s2"></div>
+    <p class="try" style="margin-top:8px">Example 3: oops! An unguarded card gets eaten.</p>
+    <div id="s3"></div>
+    <p class="say">The order of your cards matters. In Example 1 and Example 3 we used almost the same two cards, but in a different order, and one worked while the other did not.</p>
+  </section>
+
+  <section class="chap" id="c6">
+    <h2><span class="num">6</span>Your turn</h2>
+    <p>Each player holds <b>4 cards</b>. On your turn you do <b>one</b> of these:</p>
+    <div class="two">
+      <div class="opt"><b>Discard and draw</b>Put one card at the bottom of the deck and take the top card. The top card is always face up, so you know what is coming.</div>
+      <div class="opt"><b>Cast a king card</b>Play a king card from your hand. The king jumps to that card's square, and you draw a new card.</div>
+      <div class="opt"><b>Announce a checkmate</b>Say "Checkmate in 2" (or 3 or 4) and keep that many cards. Next chapter!</div>
+      <div class="opt"><b>Pass</b>Do nothing this turn.</div>
+    </div>
+    <p><b>Swap a pawn.</b> A pawn on rank 8 (Ph8, Pg8, Pf8 or Pe8) is a bit weak. It can be swapped for a stronger piece on the same square, taken from the <b>spare deck</b>. Swapping is free, so you can do it as many times as you like on your turn.</p>
+    <div class="row"><div class="card"><span class="g w">&#9823;</span><span class="i">Pg8</span></div><span style="font-size:30px">&rarr;</span><div class="card"><span class="g w">&#9819;</span><span class="i">Qg8</span></div></div>
+  </section>
+
+  <section class="chap" id="c7">
+    <h2><span class="num">7</span>Announce and defend</h2>
+    <p>This is the exciting part. You think you can trap the king, but there is a catch: <b>everyone else gets a chance to ruin your plan</b>. It happens in three steps.</p>
+
+    <h3 style="color:var(--red)">Step 1: Announce</h3>
+    <p>You say out loud: <b>"Checkmate in 2!"</b> (or 3, or 4). The number is how many cards you will place. You pick that many cards from your hand and keep them <b>face down</b>, so nobody knows which ones they are.</p>
+    <div class="two">
+      <div class="opt"><b>The other cards</b>Any cards you did not keep are discarded to the bottom of the deck. Your announcing turn ends.</div>
+      <div class="opt"><b>Why a number?</b>It is a clue. "In 2" tells the others you only need two cards, so your mate is short and sneaky.</div>
+    </div>
+    <p class="hint">You need at least 2 cards, and you cannot keep king cards. The king is the one you are hunting, so king cards never go in a mate.</p>
+
+    <h3 style="color:var(--red)">Step 2: The others defend</h3>
+    <p>Now every other player has <b>one turn</b> before you reveal. Nobody can see your cards, so defending is a clever guess. The players can:</p>
+    <div class="two">
+      <div class="opt"><b>Cast a king card (best!)</b>The king jumps to a new square. Your mate was planned for the old square, so it may not work now. If several players cast king cards, <b>the last one counts</b>.</div>
+      <div class="opt"><b>Do something else</b>They can discard and draw, swap a pawn, pass, or even announce their own mate. But then they are not defending.</div>
+    </div>
+    <p class="say">A defender with no king card in hand cannot move the king. Keeping a king card is like keeping a shield.</p>
+
+    <p class="try">Try it: you are Leo. Mia announced "Checkmate in 2" and the king stands on h8. You hold four king cards. Which one do you play?</p>
+    <div id="d1"></div>
+
+    <h3 style="color:var(--red)">Step 3: Reveal</h3>
+    <p>When your turn comes round again, you turn your cards over and place them <b>one at a time, in any order you like</b>. After each card, the king answers by the rules from chapter 5.</p>
+    <div class="two">
+      <div class="opt"><b>It works</b>If checkmate happens, <b>you win the game!</b> If you reach it before your last card, you stop there.</div>
+      <div class="opt"><b>It fails</b>No penalty. You draw cards back up to 4 and the game goes on. You learned where the king was, and so did everyone else.</div>
+    </div>
+    <p class="hint">You may swap a pawn from rank 8 for a stronger piece before you reveal. That can rescue a mate that a defender spoiled.</p>
+    <p class="try">Example 4: Mia announces, Leo defends, and the mate fails.</p>
+    <div id="s4"></div>
+
+    <h3 style="color:var(--red)">More things to know</h3>
+    <dl>
+      <dt>Two announcers</dt><dd>If two players announce, each one reveals when the turn gets to them. The first real checkmate wins.</dd>
+      <dt>Hard squares</dt><dd>A king in a corner is easy to trap. A king in the middle (g7, f7, g6, f6) has lots of room, so it is the hardest to mate. Smart defenders play king cards on middle squares.</dd>
+      <dt>Smart announcers</dt><dd>Pick a mate that works on many squares. Then a defender's king card is less likely to spoil it.</dd>
+      <dt>Bluffing</dt><dd>You may announce without a real mate. If the others waste their king cards defending, that helps you. But you will draw cards and lose a turn when it fails.</dd>
+    </dl>
+
+    <h3 style="color:var(--red)">Try it: how roomy is the king's home?</h3>
+    <p class="try">Touch a square to put the king there. The dots show where it can step.</p>
+    <div id="b7a"></div>
+    <p class="stage" id="b7at">Touch a square.</p>
+
+    <h3 style="color:var(--red)">Sturdy mates and fragile mates</h3>
+    <p>Some mates only work when the king stands on one exact square. Others work on many squares. Pick a mate. Green squares are where it works. Red squares are where a defender could send the king to spoil it.</p>
+    <div class="row"><button class="btn on" type="button" data-m="0">Qh6 and Qg7</button><button class="btn" type="button" data-m="1">Qh5 and Qf7</button></div>
+    <div id="b7b"></div>
+    <p class="stage" id="b7bt"></p>
+    <p class="try">Example 5: a sturdy mate beats the defender.</p>
+    <div id="s5"></div>
+
+    <h3 style="color:var(--red)">What would you do?</h3>
+    <div id="q3"></div>
+  </section>
+
+  <section class="chap" id="c8">
+    <h2><span class="num">8</span>Clocks and winning</h2>
+    <dl>
+      <dt>Clock</dt><dd>Each player has 15 minutes. The clock runs only on your own turn. If it hits zero, you are out.</dd>
+      <dt>Win a game</dt><dd>Be the first to reveal a real checkmate.</dd>
+      <dt>Win it all</dt><dd>Win 3 games to win the tournament.</dd>
+      <dt>Show board</dt><dd>The game has a Show board button. Keep it on while you learn. Switch it off when you want the big brain challenge.</dd>
+    </dl>
+  </section>
+
+  <section class="chap quiz" id="c9">
+    <h2><span class="num">9</span>Test yourself</h2>
+    <p class="try">Game 1: find the square.</p>
+    <p class="stage" id="q1t"></p>
+    <div id="bq1"></div>
+    <div class="row"><button class="btn" id="q1r">Play again</button></div>
+    <p class="try" style="margin-top:10px">Game 2: checkmate or not?</p>
+    <div id="q2"></div>
+  </section>
+
+  <section class="chap" id="c10">
+    <h2><span class="num">10</span>Cheat sheet</h2>
+    <dl>
+      <dt>Card</dt><dd>Piece letter, then file, then rank. Qh6 = queen on h6.</dd>
+      <dt>Board</dt><dd>Files h g f e. Ranks 8 7 6 5. The corner is h8.</dd>
+      <dt>Check</dt><dd>The king is attacked.</dd>
+      <dt>Checkmate</dt><dd>The king is attacked and cannot escape or eat anything.</dd>
+      <dt>Guarded</dt><dd>One of your cards sees that square, so the king cannot eat it.</dd>
+      <dt>Turn</dt><dd>Discard and draw, cast a king card, announce, or pass.</dd>
+      <dt>Defend</dt><dd>Play a king card to move the king and spoil an announced mate.</dd>
+    </dl>
+    <p class="say">Ready? Open a table in chessVill-4 and play with your friends.</p>
+  </section>
+  <p class="foot">chessVill4 tutorial. Author and developer: Brian Macugu.</p>
+</div>
+
+<script>
+var E = (function () { var module = { exports: {} };
+// chessVill rules engine (pure functions). Same logic as the Race pages, validated against python-chess.
+'use strict';
+module.exports = function makeEngine(N) {
+  const FILES = ['h', 'g', 'f', 'e'].slice(0, N), RANKS = [8, 7, 6, 5].slice(0, N);
+  const sqName = (i) => FILES[i % N] + RANKS[Math.floor(i / N)];
+  const parse = (id) => ({ t: id[0], sq: RANKS.indexOf(Number(id[2])) * N + FILES.indexOf(id[1]) });
+  function allCards() {
+    const out = [];
+    'PNBRQK'.split('').forEach((t) => FILES.forEach((f) => RANKS.forEach((r) => out.push(t + f + r))));
+    return out;
+  }
+  function spareList() {
+    const out = [];
+    'NBRQK'.split('').forEach((t) => FILES.forEach((f) => out.push(t + f + '8')));
+    return out;
+  }
+  function attackedSet(p) {
+    const s = new Set();
+    for (let i = 0; i < N * N; i++) {
+      const t = p[i]; if (!t) continue;
+      const x = i % N, y = (i / N) | 0;
+      const add = (nx, ny) => { if (nx >= 0 && nx < N && ny >= 0 && ny < N) s.add(ny * N + nx); };
+      if (t === 'P') { add(x - 1, y - 1); add(x + 1, y - 1); }
+      else if (t === 'N') { [[1, 2], [2, 1], [-1, 2], [-2, 1], [1, -2], [2, -1], [-1, -2], [-2, -1]].forEach((d) => add(x + d[0], y + d[1])); }
+      else {
+        const dirs = [];
+        if (t === 'B' || t === 'Q') dirs.push([1, 1], [1, -1], [-1, 1], [-1, -1]);
+        if (t === 'R' || t === 'Q') dirs.push([1, 0], [-1, 0], [0, 1], [0, -1]);
+        dirs.forEach((d) => {
+          let nx = x + d[0], ny = y + d[1];
+          while (nx >= 0 && nx < N && ny >= 0 && ny < N) {
+            const k = ny * N + nx; s.add(k); if (p[k]) break; nx += d[0]; ny += d[1];
+          }
+        });
+      }
+    }
+    return s;
+  }
+  function kingMoves(k, p) {
+    const out = [], kx = k % N, ky = (k / N) | 0;
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) {
+      if (!dx && !dy) continue;
+      const nx = kx + dx, ny = ky + dy;
+      if (nx < 0 || nx > N - 1 || ny < 0 || ny > N - 1) continue;
+      const d = ny * N + nx, np = p.slice(), cap = !!p[d];
+      np[d] = null;
+      if (!attackedSet(np).has(d)) out.push({ to: d, cap, np });
+    }
+    return out;
+  }
+  const describe = (o) => (o.stay ? 'stays put' : (o.cap ? 'Kx' : 'K') + sqName(o.to));
+  function verify(seq, k0) {
+    function rec(i, k, p) {
+      const c = parse(seq[i]);
+      if (c.t === 'K') return { ok: false, why: seq[i] + ' is a king card and cannot be placed.' };
+      if (c.sq === k) return { ok: false, why: seq[i] + ' cannot be placed because the king stands on ' + sqName(k) + '.' };
+      if (p[c.sq]) return { ok: false, why: seq[i] + ' cannot be placed because ' + sqName(c.sq) + ' is taken.' };
+      const np = p.slice(); np[c.sq] = c.t;
+      const check = attackedSet(np).has(k), moves = kingMoves(k, np);
+      if (check && moves.length === 0) return { ok: true, at: i };
+      if (i === seq.length - 1) {
+        return { ok: false, why: check
+          ? seq[i] + ' gives check but the king can go to ' + moves.map((m) => sqName(m.to)).join(' or ') + '.'
+          : seq[i] + ' does not give check, so it is not mate.' };
+      }
+      const opts = check ? moves : [{ stay: true, to: k, np }].concat(moves.filter((m) => m.cap));
+      let worst = { ok: true, at: 0 };
+      for (const o of opts) {
+        const r = rec(i + 1, o.to, o.np);
+        if (!r.ok) return { ok: false, why: 'After ' + seq[i] + (check ? '+' : '') + ' the king ' + (o.stay ? 'stays put' : 'plays ' + describe(o)) + '. ' + r.why };
+        if (r.at > worst.at) worst = r;
+      }
+      return worst;
+    }
+    return rec(0, k0, new Array(N * N).fill(null));
+  }
+  // The mate as it would be played: after each card, where the king can go. The king's longest resistance is shown.
+  function mateLine(seq, k0) {
+    function rec(i, k, p) {
+      const c = parse(seq[i]), np = p.slice(); np[c.sq] = c.t;
+      const check = attackedSet(np).has(k), moves = kingMoves(k, np);
+      const step = { card: seq[i], place: np.slice(), king: k, check };
+      if (check && moves.length === 0) { step.mate = true; return [step]; }
+      if (i === seq.length - 1) return null;
+      const opts = check ? moves : [{ stay: true, to: k, np }].concat(moves.filter((m) => m.cap));
+      let best = null, bo = null;
+      for (const o of opts) {
+        const r = rec(i + 1, o.to, o.np);
+        if (!r) return null;
+        if (!best || r.length > best.length) { best = r; bo = o; }
+      }
+      step.reply = { to: bo.to, cap: !!bo.cap, stay: !!bo.stay, text: bo.stay ? 'stays put' : (bo.cap ? 'captures on ' : 'moves to ') + sqName(bo.to) };
+      step.after = bo.np.slice(); step.kingAfter = bo.to;
+      return [step].concat(best);
+    }
+    return rec(0, k0, new Array(N * N).fill(null));
+  }
+  return { N, attackedSet, kingMoves, mateLine, FILES, RANKS, sqName, parse, allCards, spareList, verify };
+};
+
+return module.exports; })()(4);
+(function () {
+'use strict';
+var $ = function (id) { return document.getElementById(id); };
+var FILES = E.FILES, RANKS = E.RANKS, GL = { P: '♟', N: '♞', B: '♝', R: '♜', Q: '♛', K: '♚' };
+var problems = [];
+function sqName(i) { return E.sqName(i); }
+
+/* ---- a board, drawn from plain data ---- */
+function boardHtml(o) {
+  var h = '<div class="board' + (o.tap ? ' tap' : '') + '" role="group" aria-label="Board">';
+  h += '<div class="lab"></div>'; FILES.forEach(function (f) { h += '<div class="lab">' + f + '</div>'; });
+  for (var r = 0; r < 4; r++) {
+    h += '<div class="lab">' + RANKS[r] + '</div>';
+    for (var f = 0; f < 4; f++) {
+      var i = r * 4 + f, cls = 'sq ' + ((r + f) % 2 ? 'b' : 'a');
+      if (o.marks && o.marks[i]) cls += ' mk';
+      if (o.chk === i) cls += ' chk';
+      if (o.pick === i) cls += ' pick';
+      if (o.good === i) cls += ' good';
+      if (o.bad === i) cls += ' bad';
+      var inner = '';
+      if (o.king === i) inner = '<span class="pc k">' + GL.K + '</span>';
+      else if (o.pieces && o.pieces[i]) inner = '<span class="pc w">' + GL[o.pieces[i]] + '</span>';
+      if (o.names) inner += '<span class="nm">' + sqName(i) + '</span>';
+      h += '<div class="' + cls + '" data-sq="' + i + '"' + (o.tap ? ' role="button" tabindex="0" aria-label="' + sqName(i) + '"' : '') + '>' + inner + '</div>';
+    }
+  }
+  return h + '</div>';
+}
+function onTap(el, fn) {
+  el.addEventListener('click', function (e) { var s = e.target.closest('[data-sq]'); if (s && el.contains(s)) fn(+s.dataset.sq); });
+  el.addEventListener('keydown', function (e) { if (e.key !== 'Enter' && e.key !== ' ') return; var s = e.target.closest('[data-sq]'); if (s) { e.preventDefault(); fn(+s.dataset.sq); } });
+}
+
+/* ---- chapter 1: touch a square ---- */
+(function () {
+  var box = $('b1'), pick = -1;
+  function draw() { box.innerHTML = boardHtml({ tap: true, pick: pick, names: false }); }
+  draw();
+  onTap(box, function (i) {
+    pick = i; draw();
+    $('b1t').textContent = 'That is ' + sqName(i) + '. Column ' + FILES[i % 4] + ', row ' + RANKS[(i / 4) | 0] + '.';
+  });
+})();
+
+/* ---- chapter 3: piece playground ---- */
+(function () {
+  var box = $('b3'), type = 'Q', at = 4 + 1;
+  var info = {
+    P: 'The pawn sees the two squares diagonally in front of it, toward rank 8. It does not see straight ahead.',
+    N: 'The knight jumps in an L shape: two squares one way and one square sideways. It can jump over anything.',
+    B: 'The bishop slides along diagonals as far as it wants.',
+    R: 'The rook slides along its file and its rank, as far as it wants.',
+    Q: 'The queen is the strongest. She slides like a rook and like a bishop together.'
+  };
+  var names = { P: 'Pawn', N: 'Knight', B: 'Bishop', R: 'Rook', Q: 'Queen' };
+  var row = $('pickrow');
+  'PNBRQ'.split('').forEach(function (t) {
+    var b = document.createElement('button'); b.className = 'btn'; b.type = 'button'; b.dataset.t = t; b.textContent = names[t];
+    b.addEventListener('click', function () { type = t; draw(); }); row.appendChild(b);
+  });
+  function draw() {
+    var p = new Array(16).fill(null); p[at] = type;
+    var s = E.attackedSet(p), marks = {}; s.forEach(function (i) { marks[i] = true; });
+    box.innerHTML = boardHtml({ tap: true, pieces: p, marks: marks });
+    Array.prototype.forEach.call(row.children, function (b) { b.classList.toggle('on', b.dataset.t === type); });
+    $('b3t').textContent = names[type] + ' on ' + sqName(at) + '. ' + info[type];
+  }
+  onTap(box, function (i) { at = i; draw(); });
+  draw();
+})();
+
+/* ---- the king's answers, worked out by the game's own rules ---- */
+function trace(seq, k0) {
+  function rec(i, k, p) {
+    var c = E.parse(seq[i]), np = p.slice(); np[c.sq] = c.t;
+    var chk = E.attackedSet(np).has(k), mv = E.kingMoves(k, np);
+    var st = { card: seq[i], place: np.slice(), king: k, check: chk };
+    if (chk && !mv.length) { st.mate = true; return { ok: true, steps: [st] }; }
+    if (i === seq.length - 1) return { ok: false, steps: [st] };
+    var opts = chk ? mv : [{ stay: true, to: k, np: np }].concat(mv.filter(function (m) { return m.cap; }));
+    var best = null, bo = null;
+    for (var j = 0; j < opts.length; j++) {
+      var o = opts[j], r = rec(i + 1, o.to, o.np);
+      if (!r.ok) { setReply(st, o); return { ok: false, steps: [st].concat(r.steps) }; }
+      if (!best || r.steps.length > best.steps.length) { best = r; bo = o; }
+    }
+    setReply(st, bo); return { ok: true, steps: [st].concat(best.steps) };
+  }
+  function setReply(st, o) {
+    st.reply = o.stay ? 'stays put' : (o.cap ? 'eats the card on ' : 'moves to ') + (o.stay ? '' : sqName(o.to));
+    st.after = o.np.slice(); st.kingAfter = o.to; st.eat = !!o.cap;
+  }
+  return rec(0, k0, new Array(16).fill(null));
+}
+function stagesFor(seq, kingId, texts, name) {
+  var k0 = E.parse(kingId).sq, tr = trace(seq, k0), out = [{ p: new Array(16).fill(null), k: k0, chk: -1, t: '' }];
+  tr.steps.forEach(function (st) {
+    out.push({ p: st.place, k: st.king, chk: st.check ? st.king : -1, mate: st.mate });
+    if (st.reply) out.push({ p: st.after, k: st.kingAfter, chk: -1, reply: st.reply, eat: st.eat });
+  });
+  if (out.length !== texts.length) problems.push(name + ': ' + out.length + ' stages but ' + texts.length + ' texts');
+  out.forEach(function (s, i) { s.t = (texts[i] || '').replace('{reply}', s.reply || ''); });
+  out.ok = tr.ok; return out;
+}
+function stepper(el, stages, doneNote) {
+  var at = 0;
+  el.innerHTML = '<div class="bx"></div><p class="stage"></p><div class="row"><button class="btn" data-a="back" type="button">Back</button><button class="btn pri" data-a="next" type="button">Next</button><button class="btn" data-a="again" type="button">Start again</button></div>';
+  function draw() {
+    var s = stages[at];
+    el.querySelector('.bx').innerHTML = boardHtml({ pieces: s.p, king: s.k, chk: s.chk, names: false });
+    el.querySelector('.stage').textContent = s.t;
+    el.querySelector('[data-a=back]').disabled = at === 0; el.querySelector('[data-a=next]').disabled = at === stages.length - 1;
+  }
+  el.addEventListener('click', function (e) {
+    var a = e.target.dataset && e.target.dataset.a; if (!a) return;
+    if (a === 'next' && at < stages.length - 1) at++; else if (a === 'back' && at > 0) at--; else if (a === 'again') at = 0;
+    draw();
+  });
+  draw();
+}
+
+/* ---- the worked examples ---- */
+stepper($('s1'), stagesFor(['Qh6', 'Qg7'], 'Kh8', [
+  'The black king hides on h8, the corner. We hold two cards: Qh6 and Qg7.',
+  'We place Qh6. The queen sees all the way along the h file, so the king on h8 is in CHECK.',
+  'The king must escape. Its only safe square is g8, so it {reply}.',
+  'Now we place Qg7, right next to the king. Can the king eat it? No! Qh6 guards g7. Every other square is covered too. CHECKMATE! We win.'
+], 'ex1'));
+stepper($('s2'), stagesFor(['Pf6', 'Qg7'], 'Kh8', [
+  'The king is on h8 again. Our cards are Pf6 and Qg7.',
+  'We place the pawn on f6. It gives no check, but it quietly sees g7 and e7.',
+  'The king is not in check, so it {reply}. It has nothing to eat.',
+  'Now Qg7 gives check. The king would love to eat the queen, but the pawn on f6 guards her. No escape. CHECKMATE!'
+], 'ex2'));
+stepper($('s3'), stagesFor(['Qg7', 'Qh6'], 'Kh8', [
+  'The king is on h8. This time the cards are in the other order: Qg7 first, then Qh6.',
+  'We place Qg7 first. It gives check, but nothing guards it yet.',
+  'Gulp! The king {reply}. The queen is gone.',
+  'Our second card cannot save us. The king is safe, so this is not checkmate.'
+], 'ex3'));
+stepper($('s4'), stagesFor(['Qh6', 'Qg7'], 'Kf6', [
+  'Mia announced "Checkmate in 2" and kept two hidden cards: Qh6 and Qg7. She was sure the king was on h8. But Leo played the king card Kf6, and now the king is on f6.',
+  'Mia reveals her first card, Qh6. It still gives check, because the queen sees along rank 6.',
+  'But the king has a way out and {reply}.',
+  'Mia places Qg7. It gives check, but the king still has a free square. No checkmate! Mia draws back up to 4 cards and the game goes on. Leo defended well.'
+], 'ex4'));
+
+
+/* ---- be the defender ---- */
+(function () {
+  var el = $('d1'), cards = ['Kg8', 'Kf7', 'Ke6', 'Kh8'], seq = ['Qh6', 'Qg7'];
+  var story = {
+    Kg8: 'The king jumps to g8, right next to the corner. Mia reveals: Qh6 gives check, and Qg7 is guarded by Qh6, so the king has no way out. Her mate still works. Your defence failed!',
+    Kf7: 'The king jumps to the middle. Mia reveals Qh6, and the king simply has room to run away. Mia\'s mate is spoiled. Great defence!',
+    Ke6: 'The king jumps to e6. Mia\'s queens cannot trap it there, because it has plenty of room. Mia\'s mate is spoiled. Great defence!',
+    Kh8: 'You played the king card for the square the king already stands on. Nothing moved, so Mia\'s mate works. Your defence failed!'
+  };
+  cards.forEach(function (c) { var spoiled = !E.verify(seq, E.parse(c).sq).ok; if (spoiled !== (c === 'Kf7' || c === 'Ke6')) problems.push('defender game ' + c); });
+  el.innerHTML = '<div class="bx"></div><div class="row cards" id="dcards" style="margin:10px 0"></div><p class="stage" id="dt"></p>';
+  var cw = el.querySelector('#dcards');
+  function show(k, chk) { el.querySelector('.bx').innerHTML = boardHtml({ king: k, chk: chk == null ? -1 : chk, pieces: chk != null && chk >= 0 ? null : null }); }
+  show(E.parse('Kh8').sq);
+  cards.forEach(function (c) {
+    var b = document.createElement('button'); b.className = 'card blk'; b.type = 'button'; b.style.cursor = 'pointer'; b.setAttribute('aria-label', 'Play king card ' + c);
+    b.innerHTML = '<span class="g">&#9818;</span><span class="i">' + c + '</span>';
+    b.addEventListener('click', function () {
+      var k = E.parse(c).sq, spoiled = !E.verify(seq, k).ok;
+      var tr = trace(seq, k), last = tr.steps[tr.steps.length - 1];
+      el.querySelector('.bx').innerHTML = boardHtml({ king: k });
+      $('dt').innerHTML = '<span class="' + (spoiled ? 'ok' : 'no') + '">' + (spoiled ? 'Mate spoiled!' : 'Mate still works.') + '</span> ' + story[c] + ' <button class="btn" id="dagain" type="button" style="margin-top:6px">Try another card</button>';
+      $('dagain').addEventListener('click', function () { show(E.parse('Kh8').sq); $('dt').textContent = 'Pick a king card to play.'; });
+    });
+    cw.appendChild(b);
+  });
+  $('dt').textContent = 'Pick a king card to play. The king is on h8 now.';
+})();
+
+/* ---- quiz 1: find the square ---- */
+(function () {
+  var box = $('bq1'), score = 0, n = 0, target = 0;
+  function ask() {
+    if (n === 5) { $('q1t').textContent = 'You got ' + score + ' out of 5. ' + (score === 5 ? 'Perfect!' : 'Press Play again to try for 5.'); box.innerHTML = boardHtml({ names: true }); return; }
+    target = Math.floor(Math.random() * 16);
+    box.innerHTML = boardHtml({ tap: true });
+    $('q1t').textContent = 'Question ' + (n + 1) + ' of 5: touch ' + sqName(target) + '.';
+  }
+  onTap(box, function (i) {
+    if (n === 5) return;
+    var right = i === target; if (right) score++;
+    box.innerHTML = boardHtml({ good: right ? i : target, bad: right ? -1 : i });
+    $('q1t').textContent = right ? 'Yes! That is ' + sqName(target) + '.' : 'Not quite. You touched ' + sqName(i) + '. ' + sqName(target) + ' is the green one.';
+    n++; setTimeout(ask, 1300);
+  });
+  $('q1r').addEventListener('click', function () { score = 0; n = 0; ask(); });
+  ask();
+})();
+
+/* ---- quiz 2: checkmate or not? ---- */
+(function () {
+  var Q = [
+    { k: 'Kh8', seq: ['Qh6', 'Qg7'], why: 'Qh6 gives check and the king must go to g8. Then Qg7 comes in, and Qh6 guards it. Nowhere to go!' },
+    { k: 'Kh8', seq: ['Qg7', 'Qh6'], why: 'Qg7 has no guard when it arrives, so the king just eats it.' },
+    { k: 'Kh8', seq: ['Pf6', 'Qg7'], why: 'The pawn on f6 guards g7, so the queen cannot be eaten.' },
+    { k: 'Kg8', seq: ['Rf5', 'Rh8'], why: 'Rf5 gives no check, so the king stays. Rh8 gives check, but the king can eat it or step to g7.' }
+  ];
+  var el = $('q2'), at = 0, score = 0;
+  Q.forEach(function (q) { q.mate = E.verify(q.seq, E.parse(q.k).sq).ok; });
+  if (!(Q[0].mate && !Q[1].mate && Q[2].mate && !Q[3].mate)) problems.push('quiz answers do not match the rules');
+  function draw() {
+    if (at === Q.length) { el.innerHTML = '<p class="stage">You got ' + score + ' out of ' + Q.length + '. ' + (score === Q.length ? 'Brilliant!' : 'Go back and watch the examples again, then try once more.') + '</p><div class="row"><button class="btn" id="q2r" type="button">Play again</button></div>'; $('q2r').addEventListener('click', function () { at = 0; score = 0; draw(); }); return; }
+    var q = Q[at], k0 = E.parse(q.k).sq;
+    el.innerHTML = '<p class="stage">Question ' + (at + 1) + ' of ' + Q.length + '. The king is on ' + q.k.slice(1) + '. We place ' + q.seq.join(' and then ') + '. Is it checkmate?</p>' + boardHtml({ king: k0 }) +
+      '<div class="row" style="margin-top:10px"><button class="btn pri" data-a="y" type="button">Checkmate</button><button class="btn" data-a="n" type="button">Not checkmate</button></div><p class="stage" id="q2f"></p>';
+  }
+  el.addEventListener('click', function (e) {
+    var a = e.target.dataset && e.target.dataset.a; if (!a || at >= Q.length) return;
+    var q = Q[at], right = (a === 'y') === q.mate; if (right) score++;
+    el.querySelectorAll('button').forEach(function (b) { b.disabled = true; });
+    var f = el.querySelector('#q2f'); f.innerHTML = '<span class="' + (right ? 'ok' : 'no') + '">' + (right ? 'Correct! ' : 'Not this time. ') + (q.mate ? 'It is checkmate. ' : 'It is not checkmate. ') + '</span>' + q.why + '</p>';
+    var nb = document.createElement('button'); nb.className = 'btn'; nb.type = 'button'; nb.textContent = 'Next question'; nb.addEventListener('click', function () { at++; draw(); }); f.parentNode.appendChild(nb);
+  });
+  draw();
+})();
+
+/* ---- chapter 7: king's room ---- */
+(function () {
+  var box = $('b7a');
+  function draw(i) {
+    var marks = {}, n = 0;
+    if (i >= 0) E.kingMoves(i, new Array(16).fill(null)).forEach(function (m) { marks[m.to] = true; n++; });
+    box.innerHTML = boardHtml({ tap: true, king: i >= 0 ? i : null, marks: marks });
+    if (i >= 0) $('b7at').textContent = 'A king on ' + sqName(i) + ' can step to ' + n + ' squares. ' + (n === 3 ? 'That is a corner: easy to trap.' : n === 5 ? 'That is on the edge.' : 'That is in the middle: lots of room, hard to trap.');
+  }
+  onTap(box, draw); draw(-1);
+})();
+
+/* ---- chapter 7: sturdy mates ---- */
+(function () {
+  var M = [['Qh6', 'Qg7'], ['Qh5', 'Qf7']], box = $('b7b'), cur = 0, row = box.previousElementSibling;
+  function draw() {
+    var seq = M[cur], good = [], bad = [];
+    for (var k = 0; k < 16; k++) (E.verify(seq, k).ok ? good : bad).push(k);
+    var h = '<div class="board" role="group" aria-label="Where the mate works"><div class="lab"></div>';
+    FILES.forEach(function (f) { h += '<div class="lab">' + f + '</div>'; });
+    for (var r = 0; r < 4; r++) { h += '<div class="lab">' + RANKS[r] + '</div>'; for (var f = 0; f < 4; f++) { var i = r * 4 + f, g = good.indexOf(i) >= 0; h += '<div class="sq ' + (g ? 'good' : 'bad') + '"><span class="nm" style="font-size:13px;left:auto;right:5px;bottom:5px;color:var(--fg)">' + sqName(i) + '</span></div>'; } }
+    box.innerHTML = h + '</div>';
+    $('b7bt').textContent = seq.join(' then ') + ' is checkmate on ' + good.length + ' of the 16 squares. ' + (good.length > 9 ? 'A sturdy mate! Leo has only ' + bad.length + ' squares to jump to.' : 'A fragile mate. Leo has ' + bad.length + ' squares to jump to.');
+    Array.prototype.forEach.call(row.querySelectorAll('.btn'), function (b) { b.classList.toggle('on', +b.dataset.m === cur); });
+  }
+  row.addEventListener('click', function (e) { var m = e.target.dataset && e.target.dataset.m; if (m == null) return; cur = +m; draw(); });
+  draw();
+})();
+stepper($('s5'), stagesFor(['Qh5', 'Qf7'], 'Kg7', [
+  'Mia announced "Checkmate in 2" thinking the king was on h8. Leo cast the king card Kg7 to move it to the middle. Now the king is on g7.',
+  'Mia reveals Qh5. It gives no check, because the queen does not see g7.',
+  'The king is not in check, so it {reply}.',
+  'Mia places Qf7. It gives check, and Qh5 guards it along the diagonal, so the king cannot eat it. Every escape is covered. CHECKMATE! Leo defended, but Mia chose a sturdy mate.'
+], 'ex5'));
+
+/* ---- chapter 7: what would you do? ---- */
+(function () {
+  var Q = [
+    { q: 'Ann announced "Checkmate in 2". You hold two king cards: Kh8 (the corner) and Kg7 (the middle). Which should you cast?', o: ['Kh8, the corner', 'Kg7, the middle', 'Neither, just pass'], a: 1, why: 'Kg7. A king in the middle has more room, so it is harder to trap. The corner is the easiest place to checkmate a king.' },
+    { q: 'Ann announced a mate. You have no king card, but you do hold a pawn on g8 (Pg8). What clever thing can you do?', o: ['Nothing. You cannot defend.', 'Swap Pg8 for the king card Kg8, then cast it', 'Announce a mate in 1'], a: 1, why: 'Swapping is free. A pawn on rank 8 can be swapped for a king card from the spare deck, and then you can cast it right away.' },
+    { q: 'Ann announced. Then Leo cast Kf6 and then Sam cast Ke5. Where does the king stand when Ann reveals?', o: ['f6, Leo was first', 'e5, Sam was last', 'Back on the starting square'], a: 1, why: 'The last king card decides. Sam was last, so the king stands on e5.' },
+    { q: 'Ann reveals her cards, but the last card is not checkmate. What happens?', o: ['Ann is out of the game', 'Ann draws back up to 4 cards and her turn ends', 'Ann must announce again at once'], a: 1, why: 'No big punishment. Ann draws back up to 4 cards, her turn is over, and the game goes on.' }
+  ];
+  var el = $('q3'), at = 0, score = 0;
+  function draw() {
+    if (at === Q.length) { el.innerHTML = '<p class="stage">You got ' + score + ' out of ' + Q.length + '. ' + (score === Q.length ? 'You are ready to duel!' : 'Read the steps above once more and try again.') + '</p><div class="row"><button class="btn" data-a="r" type="button">Play again</button></div>'; return; }
+    var q = Q[at];
+    el.innerHTML = '<p class="stage">Question ' + (at + 1) + ' of ' + Q.length + '. ' + q.q + '</p><div class="quiz"><div class="opts" style="flex-direction:column;align-items:flex-start">' + q.o.map(function (t, i) { return '<button class="btn" data-a="' + i + '" type="button">' + t + '</button>'; }).join('') + '</div></div><p class="stage" id="q3f"></p>';
+  }
+  el.addEventListener('click', function (e) {
+    var a = e.target.dataset && e.target.dataset.a; if (a == null) return;
+    if (a === 'r') { at = 0; score = 0; draw(); return; }
+    var q = Q[at], right = +a === q.a; if (right) score++;
+    el.querySelectorAll('button').forEach(function (b) { b.disabled = true; });
+    var f = el.querySelector('#q3f'); f.innerHTML = '<span class="' + (right ? 'ok' : 'no') + '">' + (right ? 'Correct! ' : 'Not this time. ') + '</span>' + q.why;
+    var nb = document.createElement('button'); nb.className = 'btn pri'; nb.type = 'button'; nb.textContent = 'Next'; nb.addEventListener('click', function () { at++; draw(); }); f.parentNode.appendChild(nb);
+  });
+  draw();
+})();
+window.__problems = problems;
+})();
+</script>
+</body>
+</html>

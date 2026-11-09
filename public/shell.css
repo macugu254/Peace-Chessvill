@@ -1,0 +1,32 @@
+/* Site shell: top menu and footer shared by every page. Namespaced so it never clashes with a page's own styles. */
+.cvnav,.cvfoot{--cv-bg:#ffffff;--cv-fg:#14161c;--cv-muted:#586070;--cv-line:#d6dae1;--cv-accent:#b42318;--cv-accent-fg:#fff;--cv-blue:#1d3f8c;--cv-soft:#f3f4f7;
+  font-family:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;font-size:16px;line-height:1.5;color:var(--cv-fg)}
+@media (prefers-color-scheme:dark){.cvnav,.cvfoot{--cv-bg:#171b24;--cv-fg:#eceef3;--cv-muted:#9ba3b2;--cv-line:#2a303c;--cv-accent:#ef6a5a;--cv-accent-fg:#14161c;--cv-blue:#86a8f7;--cv-soft:#1d222d}}
+.cvnav *,.cvfoot *{box-sizing:border-box}
+.cvnav{background:var(--cv-bg);border-bottom:2px solid var(--cv-fg);margin:-20px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 18px calc(-1 * max(16px,env(safe-area-inset-right,0px)));padding:0 max(16px,env(safe-area-inset-left,0px));position:relative;z-index:40}
+.cvnav .cvin{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px;padding:8px 0}
+.cvbrand{font-size:22px;font-weight:500;letter-spacing:-.02em;color:var(--cv-fg);text-decoration:none;margin-right:auto}
+.cvbrand b{font-weight:800;color:var(--cv-accent)}
+.cvbrand span{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cv-muted);margin-left:6px}
+.cvnav nav{display:flex;flex-wrap:wrap;align-items:center;gap:2px 4px}
+.cvnav nav>a,.cvnav summary{display:block;padding:6px 10px;color:var(--cv-fg);text-decoration:none;font-weight:700;font-size:15px;cursor:pointer;list-style:none;border-bottom:3px solid transparent}
+.cvnav summary::-webkit-details-marker{display:none}
+.cvnav summary::after{content:" \25BE";font-size:11px}
+.cvnav nav>a:hover,.cvnav summary:hover{color:var(--cv-blue)}
+.cvnav [aria-current]{border-bottom-color:var(--cv-accent)}
+.cvnav details{position:relative}
+.cvnav details>div{position:absolute;left:0;top:100%;min-width:210px;background:var(--cv-bg);border:2px solid var(--cv-fg);padding:4px;z-index:50}
+.cvnav details>div a{display:block;padding:7px 10px;color:var(--cv-fg);text-decoration:none;font-weight:600}
+.cvnav details>div a:hover{background:var(--cv-soft);color:var(--cv-blue)}
+.cvnav a:focus-visible,.cvnav summary:focus-visible,.cvfoot a:focus-visible,.cvfoot button:focus-visible{outline:3px solid var(--cv-blue);outline-offset:2px}
+.cvfoot{background:var(--cv-bg);border-top:2px solid var(--cv-fg);margin:48px calc(-1 * max(16px,env(safe-area-inset-right,0px))) -48px calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:26px max(16px,env(safe-area-inset-left,0px)) 28px}
+.cvfoot .cvin{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:26px}
+.cvfoot h2{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cv-accent)}
+.cvfoot p{margin:0 0 8px}
+.cvfoot a{color:var(--cv-blue)}
+.cvfoot .cvwallet{font-family:'DM Mono',ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all;padding:8px 10px;border:1px solid var(--cv-line);background:var(--cv-soft);user-select:all}
+.cvfoot button{font:inherit;font-weight:700;padding:8px 14px;border:2px solid var(--cv-fg);background:var(--cv-bg);color:var(--cv-fg);cursor:pointer;margin-top:8px}
+.cvfoot button:hover{border-color:var(--cv-blue);color:var(--cv-blue)}
+.cvfoot #cvqr{width:150px;max-width:100%;margin-top:10px;padding:8px;background:#fff;line-height:0}
+.cvfoot .cvsmall{font-size:13px;color:var(--cv-muted)}
+.cvfoot .cvlegal{grid-column:1/-1;border-top:1px solid var(--cv-line);padding-top:12px;font-size:13px;color:var(--cv-muted)}

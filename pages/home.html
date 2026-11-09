@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>chessVill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: a hero with a tiny mate on a 4x4 board, then the four doors in the order a newcomer should take them. */
+:root{--bg:#eef0f3;--surface:#fff;--fg:#14161c;--muted:#586070;--line:#d6dae1;--accent:#b42318;--accent-fg:#fff;--blue:#1d3f8c;--sq1:#e7e9ee;--sq2:#b9c0cf;--soft:#fff4d6;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;--mono:'DM Mono',ui-monospace,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1117;--surface:#171b24;--fg:#eceef3;--muted:#9ba3b2;--line:#2a303c;--accent:#ef6a5a;--accent-fg:#14161c;--blue:#86a8f7;--sq1:#2a303c;--sq2:#3d4658;--soft:#2b2a1d;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--display);font-size:17px;line-height:1.6;padding-block:20px 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1000px;margin-inline:auto;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{margin:0;line-height:1.1;text-wrap:balance}
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:center}
+@media (max-width:760px){.hero{grid-template-columns:1fr}}
+.kicker{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+h1{font-size:clamp(44px,9vw,76px);font-weight:500;letter-spacing:-.03em}h1 b{font-weight:800;color:var(--accent)}
+.lead{font-size:20px;margin:16px 0 0;max-width:30em}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-block;font:inherit;font-weight:700;padding:11px 20px;border:2px solid var(--fg);background:var(--surface);color:var(--fg);text-decoration:none}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn:hover{border-color:var(--blue);color:var(--blue)}.btn.pri:hover{color:var(--accent-fg);filter:brightness(1.08)}
+a:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.demo{justify-self:center;text-align:center}
+.board{display:grid;grid-template-columns:repeat(4,clamp(54px,17vw,80px));grid-auto-rows:clamp(54px,17vw,80px);border:3px solid var(--fg)}
+.sq{display:grid;place-items:center;font-size:clamp(30px,9vw,48px);line-height:1}.sq.a{background:var(--sq1)}.sq.b{background:var(--sq2)}
+.w{color:#fff;-webkit-text-stroke:1.6px #14161c;paint-order:stroke fill}.k{color:#101522;-webkit-text-stroke:1px #fff}
+@media (prefers-color-scheme:dark){.k{color:#0b0f1a;-webkit-text-stroke:1.4px #fff}}
+.demo p{margin:10px 0 0;font-size:14px;color:var(--muted);font-family:var(--mono)}
+h2{font-size:30px;font-weight:700}
+.sub{margin:8px 0 0;color:var(--muted);max-width:36em}
+.doors{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:20px;padding:0;list-style:none;counter-reset:d}
+.doors li{counter-increment:d;border:2px solid var(--fg);background:var(--surface);padding:16px 16px 18px;display:flex;flex-direction:column;gap:8px}
+.doors li::before{content:counter(d);font-family:var(--mono);font-weight:500;font-size:22px;color:var(--accent)}
+.doors h3{font-size:21px}
+.doors p{margin:0;color:var(--muted);flex:1}
+.doors .links{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.doors .btn{padding:8px 14px;font-size:15px}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:16px}
+.how div{border-left:5px solid var(--accent);background:var(--surface);padding:12px 16px}
+.how b{display:block;font-size:18px}
+.how span{color:var(--muted)}
+.note{background:var(--soft);border-left:5px solid #f2b705;padding:12px 16px;max-width:42em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div>
+      <p class="kicker">ChessVill Center</p>
+      <h1>chess<b>Vill</b></h1>
+      <p class="lead">A card-based chess game, a game of luck and intellect. It was developed to train the mind's eye by visualizing a chessboard that is never in front of you.</p>
+      <div class="cta"><a class="btn pri" href="/learn">Start with the Beginner's Guide</a><a class="btn" href="#play">Jump to the games</a></div>
+    </div>
+    <div class="demo" aria-hidden="true">
+      <div class="board">
+        <div class="sq a"><span class="k">&#9818;</span></div><div class="sq b"></div><div class="sq a"></div><div class="sq b"></div>
+        <div class="sq b"></div><div class="sq a"><span class="w">&#9819;</span></div><div class="sq b"></div><div class="sq a"></div>
+        <div class="sq a"><span class="w">&#9819;</span></div><div class="sq b"></div><div class="sq a"></div><div class="sq b"></div>
+        <div class="sq b"></div><div class="sq a"></div><div class="sq b"></div><div class="sq a"></div>
+      </div>
+      <p>Qh6 then Qg7: checkmate</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>How a game works</h2>
+    <div class="how">
+      <div><b>Cards, not a board</b><span>Each card is a white piece on a square of a small board. A black king hides somewhere on it.</span></div>
+      <div><b>Announce a checkmate</b><span>Say "checkmate in 2" and keep those cards face down. Everyone else gets one turn to spoil it.</span></div>
+      <div><b>Reveal and win</b><span>Place your cards one at a time. If the king is trapped, you win the game. Win 3 games to win the tournament.</span></div>
+    </div>
+  </section>
+
+  <section id="play">
+    <h2>Four ways to play, in order</h2>
+    <p class="sub">New here? Take them from left to right, or jump straight to the one you want.</p>
+    <ol class="doors">
+      <li><h3>Learn</h3><p>Start from zero with the Beginner's Guide. Younger players have a Kids' Tutorial with friendlier words.</p><div class="links"><a class="btn pri" href="/learn">Beginner's Guide</a><a class="btn" href="/learn/kids">Kids' Tutorial</a></div></li>
+      <li><h3>Play the bots</h3><p>Who's The Lucky Genius? You against eight bots, with full announcing, defending and a three-win tournament.</p><div class="links"><a class="btn pri" href="/play/bots">Play now</a></div></li>
+      <li><h3>Friends table</h3><p>Open a table and invite up to 7 friends with a link. Humans only, no bots.</p><div class="links"><a class="btn pri" href="/play/friends">Open a table</a></div></li>
+      <li><h3>Race edition</h3><p>Race the clock, or a friend, to solve the same deal. Played on a 4 by 4 or a 3 by 3 board.</p><div class="links"><a class="btn pri" href="/play/race/4">chessVill-4</a><a class="btn" href="/play/race/3">chessVill-3</a></div></li>
+    </ol>
+  </section>
+
+  <p class="note">The board is optional. Beginners can switch on Show board in the games, and switch it off later when they are ready for the real challenge.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Beginner's Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* Layout: one calm reading column. Numbered lessons separated by rules, boards you can touch inside each. */
+:root{
+  --bg:#eef0f3; --surface:#ffffff; --fg:#14161c; --muted:#586070; --line:#d6dae1;
+  --accent:#b42318; --accent-fg:#ffffff; --blue:#1d3f8c; --ok:#17784a; --soft:#fff4d6;
+  --sq1:#e7e9ee; --sq2:#b9c0cf; --mark:#f2b705; --chk:#f0a79e; --ink:#14161c;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif; --mono:'DM Mono',ui-monospace,Menlo,Consolas,monospace;
+  --cell:clamp(52px,17vw,68px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1117; --surface:#171b24; --fg:#eceef3; --muted:#9ba3b2; --line:#2a303c;
+  --accent:#ef6a5a; --accent-fg:#14161c; --blue:#86a8f7; --ok:#4cc38a; --soft:#2b2a1d;
+  --sq1:#2a303c; --sq2:#3d4658; --mark:#e0a800; --chk:#7d332c; --ink:#eceef3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1117; --surface:#171b24; --fg:#eceef3; --muted:#9ba3b2; --line:#2a303c;
+  --accent:#ef6a5a; --accent-fg:#14161c; --blue:#86a8f7; --ok:#4cc38a; --soft:#2b2a1d;
+  --sq1:#2a303c; --sq2:#3d4658; --mark:#e0a800; --chk:#7d332c; --ink:#eceef3; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--display);font-size:17px;line-height:1.6;
+  padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:680px;margin-inline:auto;display:flex;flex-direction:column;gap:34px}
+h1,h2,h3{margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(34px,9vw,50px);font-weight:500;letter-spacing:-.02em}h1 b{font-weight:800;color:var(--accent)}
+.kicker{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+.lead{font-size:19px;margin:12px 0 0;max-width:34em}
+.toc{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 0;padding:0;list-style:none}
+.toc a{display:block;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:4px 12px;text-decoration:none;font-size:15px}
+.toc a:hover{border-color:var(--blue);color:var(--blue)}
+section.l{border-top:3px solid var(--fg);padding-top:14px;display:flex;flex-direction:column;gap:14px}
+section.l h2{font-size:26px;font-weight:700;display:flex;gap:12px;align-items:baseline}
+section.l h2 span{font-family:var(--mono);font-weight:500;color:var(--accent);font-size:20px}
+section.l p{margin:0;max-width:36em}
+h3{font-size:19px;font-weight:700;color:var(--accent)}
+.note{background:var(--soft);border-left:5px solid var(--mark);padding:10px 14px;max-width:36em}
+.aim{border:2px solid var(--fg);padding:12px 16px;max-width:36em;background:var(--surface)}
+.aim b{display:block;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.board{display:grid;grid-template-columns:24px repeat(4,var(--cell));grid-template-rows:24px repeat(4,var(--cell));width:max-content;max-width:100%;touch-action:manipulation}
+.board .lab{display:grid;place-items:center;font-family:var(--mono);font-size:14px;color:var(--muted)}
+.sq{position:relative;display:grid;place-items:center;font-size:calc(var(--cell)*.62);line-height:1;user-select:none}
+.sq.a{background:var(--sq1)}.sq.b{background:var(--sq2)}
+.board.tap .sq{cursor:pointer}.board.tap .sq:hover{outline:3px solid var(--blue);outline-offset:-3px}
+.sq.mk::after{content:"";width:32%;height:32%;border-radius:50%;background:var(--mark);position:absolute}
+.sq.mk .pc{position:relative;z-index:1}
+.sq.chk{background:var(--chk)}.sq.pick{outline:4px solid var(--accent);outline-offset:-4px}
+.sq.good{background:color-mix(in srgb,var(--ok) 50%,var(--sq1))}.sq.bad{background:var(--chk)}
+.sq .nm{position:absolute;left:4px;bottom:1px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.w{color:#fff;-webkit-text-stroke:1.6px #14161c;paint-order:stroke fill;text-shadow:0 1px 0 #14161c}
+.k{color:#101522;-webkit-text-stroke:1px #fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .k{color:#0b0f1a;-webkit-text-stroke:1.4px #fff}}
+:root[data-theme="dark"] .k{color:#0b0f1a;-webkit-text-stroke:1.4px #fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font-family:var(--display);font-weight:700;font-size:16px;padding:9px 16px;border:2px solid var(--fg);background:var(--surface);color:var(--fg);cursor:pointer}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}.btn.pri:hover{color:var(--accent-fg);filter:brightness(1.08)}
+.btn.on{background:var(--blue);border-color:var(--blue);color:var(--surface)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.stage{font-weight:700;min-height:3.4em;margin:0;max-width:36em}
+.hint{font-size:15px;color:var(--muted)}
+.card{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:68px;height:92px;border:2px solid var(--ink);background:var(--surface);font-family:var(--mono);gap:2px;color:var(--fg);position:relative}
+.card .g{font-size:34px;line-height:1}.card .i{font-size:15px}
+.card.blk{background:#1b1e27;color:#f2f3f6;border-color:#1b1e27}
+button.card{cursor:pointer}button.card.sel{outline:4px solid var(--accent);outline-offset:2px}
+.card .o{position:absolute;top:2px;right:4px;font-weight:700;color:var(--accent);font-size:14px}
+.cards{display:flex;gap:10px;flex-wrap:wrap}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;align-items:start}
+.opt{border:1px solid var(--line);background:var(--surface);padding:10px 14px}
+.opt>b:first-child{display:block;color:var(--accent);font-size:17px}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 16px;max-width:36em}dt{font-weight:700;color:var(--accent)}dd{margin:0}
+ol.story{margin:0;padding-left:22px;max-width:36em;display:flex;flex-direction:column;gap:10px}
+.chip{font-family:var(--mono);font-size:14px;background:#1b1e27;color:#f2f3f6;padding:1px 7px;white-space:nowrap}
+.chip.w2{background:var(--surface);color:var(--fg);border:1px solid var(--ink)}
+.ok{color:var(--ok);font-weight:800}.no{color:var(--accent);font-weight:800}
+details{border:1px solid var(--line);background:var(--surface);padding:10px 14px;max-width:36em}
+summary{cursor:pointer;font-weight:700}
+details[open] summary{margin-bottom:6px}
+.foot{font-size:14px;color:var(--muted);text-align:center}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Beginner's guide</p>
+    <h1>chess<b>Vill</b>4</h1>
+    <p class="lead">You do not need to know chess. This guide starts from zero, explains every word the first time it appears, and lets you try each idea on a real board before you move on.</p>
+    <ul class="toc">
+      <li><a href="#l1">1 The idea</a></li><li><a href="#l2">2 Board</a></li><li><a href="#l3">3 Pieces</a></li><li><a href="#l4">4 Mate</a></li><li><a href="#l5">5 A turn</a></li><li><a href="#l6">6 A whole game</a></li><li><a href="#l7">7 Practice</a></li><li><a href="#l8">8 Questions</a></li>
+    </ul>
+  </header>
+
+  <section class="l" id="l1">
+    <h2><span>1</span>The idea in one minute</h2>
+    <p>Somewhere on a tiny board, a <b>black king</b> is hiding. Everyone at the table has a hand of <b>cards</b>. Each card is a white chess piece on a named square. Your job is to find a way to <b>trap the king</b> using your cards. The first player to prove a trap wins the game.</p>
+    <div class="aim"><b>The goal</b>Build a checkmate with your cards, before anyone else does. Win 3 games to win the tournament.</div>
+    <p>Nobody needs a real board, because the position lives in your head. That is the point of the game: it trains you to picture a chess position without looking at one. If you are just starting, the game has a <b>Show board</b> switch that draws the board for you.</p>
+    <p class="hint">Words in bold are the ones you will meet again. The cheat sheet at the end lists them all.</p>
+  </section>
+
+  <section class="l" id="l2">
+    <h2><span>2</span>The board and its square names</h2>
+    <p>The board is a <b>4 by 4 grid</b> of 16 squares. It is one corner of a normal chessboard. The columns are called <b>files</b> and use letters: <b>h, g, f, e</b>. The rows are called <b>ranks</b> and use numbers: <b>8, 7, 6, 5</b>.</p>
+    <p>A square's name is its file letter followed by its rank number. The top left corner is <b>h8</b>. Next to it is <b>g8</b>. Below h8 is <b>h7</b>.</p>
+    <p class="note">You will see the board from the black king's side. That is why the letters run h, g, f, e from left to right and the 8 is at the top.</p>
+    <p><b>Try it:</b> touch squares and check the name in the line below.</p>
+    <div id="b1"></div>
+    <p class="stage" id="b1t">Touch a square.</p>
+  </section>
+
+  <section class="l" id="l3">
+    <h2><span>3</span>Cards and pieces</h2>
+    <p>Every card names a piece and a square, for example <b>Qh6</b>. Read it as <b>Q</b> (queen) + <b>h6</b> (square h6). Pieces use these letters:</p>
+    <dl>
+      <dt>P</dt><dd>Pawn: sees the two squares diagonally in front of it, toward rank 8</dd>
+      <dt>N</dt><dd>Knight: jumps in an L shape</dd>
+      <dt>B</dt><dd>Bishop: slides along diagonals</dd>
+      <dt>R</dt><dd>Rook: slides along its file and rank</dd>
+      <dt>Q</dt><dd>Queen: slides like a rook and a bishop together</dd>
+      <dt>K</dt><dd>King: the black king you are hunting. King cards are black.</dd>
+    </dl>
+    <p>When a piece "sees" a square, we say it <b>attacks</b> it. If the black king stands on a square a piece attacks, the king is in <b>check</b>. Choose a piece and touch the board to see what it attacks. The yellow dots are the attacked squares.</p>
+    <div class="row" id="pickrow"></div>
+    <div class="row"><button class="btn" id="wallbtn" type="button">Add walls: off</button><span class="hint">With walls on, touch squares to build blockers. Pieces cannot see past them.</span></div>
+    <div id="b3"></div>
+    <p class="stage" id="b3t"></p>
+    <p class="note">Sliding pieces (bishop, rook, queen) stop at the first card in their way. In the real game, your own placed cards can block each other, so watch for that.</p>
+  </section>
+
+  <section class="l" id="l4">
+    <h2><span>4</span>Check, escape, and checkmate</h2>
+    <p>The black king never plays on its own. It only <b>answers</b> each card you place. These are its rules:</p>
+    <dl>
+      <dt>If it is in check</dt><dd>It must move to a safe square next to it, or eat an unprotected card next to it. If it has no way out, that is <b>checkmate</b>. You win.</dd>
+      <dt>If it is not in check</dt><dd>It stays where it is. It may only eat an unprotected card next to it.</dd>
+      <dt>Safe square</dt><dd>A square none of your cards attack.</dd>
+      <dt>Protected card</dt><dd>A card another of your cards also attacks. The king can never eat it.</dd>
+    </dl>
+    <p>Your cards are placed <b>one at a time</b>, in the order you choose. That order matters a lot. Watch three examples. Press <b>Next</b> to step through.</p>
+    <h3>Example 1: two queens</h3>
+    <div id="s1"></div>
+    <h3>Example 2: a quiet card helps</h3>
+    <p>This time the first card does not give check. It just prepares the ground.</p>
+    <div id="s2"></div>
+    <h3>Example 3: the wrong order</h3>
+    <p>The same queens as Example 1, placed in the other order.</p>
+    <div id="s3"></div>
+  </section>
+
+  <section class="l" id="l5">
+    <h2><span>5</span>What you do on your turn</h2>
+    <p>Everyone holds <b>4 cards</b>. The top card of the draw pile is always face up, so you know what you will draw next. On your turn you do <b>one</b> of these:</p>
+    <div class="two">
+      <div class="opt"><b>Discard and draw</b>Put a card at the bottom of the deck and take the top card. This is how you improve your hand.</div>
+      <div class="opt"><b>Cast a king card</b>Play a black king card. The king moves to that card's square. You draw a card to replace it.</div>
+      <div class="opt"><b>Announce a checkmate</b>Say "checkmate in 2" (or 3, or 4). You keep that many cards face down and discard the rest.</div>
+      <div class="opt"><b>Pass</b>Do nothing.</div>
+    </div>
+    <h3>Announcing and defending</h3>
+    <p>After you announce, every other player gets <b>one turn</b> to spoil your plan. Nobody can see your cards, so the best defence is to cast a king card and move the king. Your cards were picked for the old square and may not work on the new one. If several king cards are cast, the <b>last one</b> counts.</p>
+    <p>When your turn comes back, you <b>reveal</b>: you place your cards one at a time. If the last one is checkmate, you win. If not, you simply draw back up to 4 cards and play on. There is no penalty.</p>
+    <h3>Swapping a pawn</h3>
+    <p>A pawn on rank 8 (Ph8, Pg8, Pf8, Pe8) can be swapped, for free, for a stronger piece on the same square from the <b>spare deck</b>. You can swap as often as you like on your turn.</p>
+    <h3>The clock</h3>
+    <p>Each player has 15 minutes. The clock runs only on your own turn. If it reaches zero, you are out of that game.</p>
+  </section>
+
+  <section class="l" id="l6">
+    <h2><span>6</span>A whole game, slowly</h2>
+    <p>Ann and Ben are playing. The game started with the black king on <b>h8</b>. Follow along.</p>
+    <ol class="story">
+      <li><b>Ann's hand:</b> <span class="chip w2">Qh6</span> <span class="chip w2">Qg7</span> <span class="chip w2">Pe5</span> <span class="chip w2">Bg5</span>. She spots a mate right away: Qh6, then Qg7 (this is Example 1). She <b>announces "checkmate in 2"</b>, keeps Qh6 and Qg7 face down, and discards Pe5 and Bg5.</li>
+      <li><b>Ben's hand:</b> <span class="chip">Kf6</span> <span class="chip w2">Qh5</span> <span class="chip w2">Pe6</span> <span class="chip w2">Rg5</span>. He cannot see Ann's cards, but he knows something is coming. He <b>casts the king card Kf6</b>. The king moves from h8 to f6, in the middle, where it has the most room. He draws the face-up top card: <span class="chip w2">Qf7</span>.</li>
+      <li><b>Ann reveals.</b> Her turn is back. Watch what happens to her plan against a king on f6:</li>
+    </ol>
+    <div id="s4"></div>
+    <ol class="story" start="4">
+      <li>Ann's mate failed, so she draws back up to 4 cards (she gets two new cards, no king card among them). Her turn ends.</li>
+      <li><b>Ben's next turn.</b> His hand is now <span class="chip w2">Qh5</span> <span class="chip w2">Pe6</span> <span class="chip w2">Rg5</span> <span class="chip w2">Qf7</span>. With the king on f6, Qh5 and Qf7 make a mate. He <b>announces "checkmate in 2"</b> and discards Pe6 and Rg5.</li>
+      <li><b>Ann's chance to defend.</b> She holds no king card and no pawn on rank 8 to swap, so she cannot move the king. She does something else.</li>
+      <li><b>Ben reveals.</b> Qh5 first, then Qf7:</li>
+    </ol>
+    <div id="s5"></div>
+    <p class="note"><b>What Ben did right:</b> he moved the king into the middle when he was attacked, kept a second plan in his hand, and chose a mate that fitted the king's new square.</p>
+  </section>
+
+  <section class="l" id="l7">
+    <h2><span>7</span>Practice: find the mate</h2>
+    <p>Each puzzle gives you the king's square and four cards. <b>Pick two cards in the order you would place them</b>, then press Reveal. The game's own rules check your answer.</p>
+    <div id="pz"></div>
+  </section>
+
+  <section class="l" id="l8">
+    <h2><span>8</span>Common mistakes and questions</h2>
+    <h3>Mistakes everyone makes at first</h3>
+    <dl>
+      <dt>Lonely card</dt><dd>Placing a card next to the king with nothing protecting it. The king eats it.</dd>
+      <dt>Wrong order</dt><dd>The same two cards can win in one order and fail in the other.</dd>
+      <dt>Pawn direction</dt><dd>Pawns attack the squares diagonally ahead, not straight ahead.</dd>
+      <dt>Forgetting defenders</dt><dd>Your mate fits the king's square today. A defender can change that square before you reveal.</dd>
+      <dt>Occupied squares</dt><dd>You cannot place a card on the king's square or on a square that already has a card.</dd>
+      <dt>King cards in a mate</dt><dd>King cards cannot be part of an announced mate. You are hunting the king, not using it.</dd>
+    </dl>
+    <h3>Questions</h3>
+    <details><summary>Do I need to know chess?</summary>No. You need the six piece names and how they see squares, which chapter 3 covers.</details>
+    <details><summary>Is it luck or skill?</summary>Both. You get your cards by luck, and you win by spotting what they can do, choosing the right order, and defending well.</details>
+    <details><summary>How do I remember where the king is?</summary>The king's square is public and cast king cards stay on the table. At the start, keep the Show board switch on.</details>
+    <details><summary>Can I see the other players' cards?</summary>No. You only see your own hand, how many cards each player holds, the face-up top card, and every swap.</details>
+    <details><summary>What if my announced mate does not work?</summary>Nothing bad happens beyond losing your turn. You draw back up to 4 cards.</details>
+    <details><summary>What is the spare deck?</summary>A small deck of the 20 non-pawn cards on rank 8. It is where a swapped pawn gets its new piece.</details>
+    <details><summary>How do I win the whole tournament?</summary>Win 3 games before anyone else.</details>
+    <h3>Cheat sheet</h3>
+    <dl>
+      <dt>File, rank</dt><dd>Columns h g f e. Rows 8 7 6 5.</dd>
+      <dt>Card</dt><dd>Piece letter, file, rank. Qh6 = queen on h6.</dd>
+      <dt>Attack</dt><dd>A piece sees a square. Pieces cannot see past other cards.</dd>
+      <dt>Check</dt><dd>The king is attacked.</dd>
+      <dt>Checkmate</dt><dd>The king is attacked and has no way out.</dd>
+      <dt>Protected</dt><dd>One of your other cards attacks that card's square.</dd>
+      <dt>Announce</dt><dd>Claim a checkmate in 2 to 4 cards, face down.</dd>
+      <dt>Defend</dt><dd>Cast a king card to move the king.</dd>
+      <dt>Reveal</dt><dd>Place your announced cards in order.</dd>
+      <dt>Swap</dt><dd>Trade a rank-8 pawn for a spare piece on the same square.</dd>
+    </dl>
+    <p class="note">Ready? Open the game, turn Show board on, and play your first table.</p>
+  </section>
+  <p class="foot">chessVill4 beginner's guide. Author and developer: Brian Macugu.</p>
+</div>
+
+<script>
+var E = (function () { var module = { exports: {} };
+// chessVill rules engine (pure functions). Same logic as the Race pages, validated against python-chess.
+'use strict';
+module.exports = function makeEngine(N) {
+  const FILES = ['h', 'g', 'f', 'e'].slice(0, N), RANKS = [8, 7, 6, 5].slice(0, N);
+  const sqName = (i) => FILES[i % N] + RANKS[Math.floor(i / N)];
+  const parse = (id) => ({ t: id[0], sq: RANKS.indexOf(Number(id[2])) * N + FILES.indexOf(id[1]) });
+  function allCards() {
+    const out = [];
+    'PNBRQK'.split('').forEach((t) => FILES.forEach((f) => RANKS.forEach((r) => out.push(t + f + r))));
+    return out;
+  }
+  function spareList() {
+    const out = [];
+    'NBRQK'.split('').forEach((t) => FILES.forEach((f) => out.push(t + f + '8')));
+    return out;
+  }
+  function attackedSet(p) {
+    const s = new Set();
+    for (let i = 0; i < N * N; i++) {
+      const t = p[i]; if (!t) continue;
+      const x = i % N, y = (i / N) | 0;
+      const add = (nx, ny) => { if (nx >= 0 && nx < N && ny >= 0 && ny < N) s.add(ny * N + nx); };
+      if (t === 'P') { add(x - 1, y - 1); add(x + 1, y - 1); }
+      else if (t === 'N') { [[1, 2], [2, 1], [-1, 2], [-2, 1], [1, -2], [2, -1], [-1, -2], [-2, -1]].forEach((d) => add(x + d[0], y + d[1])); }
+      else {
+        const dirs = [];
+        if (t === 'B' || t === 'Q') dirs.push([1, 1], [1, -1], [-1, 1], [-1, -1]);
+        if (t === 'R' || t === 'Q') dirs.push([1, 0], [-1, 0], [0, 1], [0, -1]);
+        dirs.forEach((d) => {
+          let nx = x + d[0], ny = y + d[1];
+          while (nx >= 0 && nx < N && ny >= 0 && ny < N) {
+            const k = ny * N + nx; s.add(k); if (p[k]) break; nx += d[0]; ny += d[1];
+          }
+        });
+      }
+    }
+    return s;
+  }
+  function kingMoves(k, p) {
+    const out = [], kx = k % N, ky = (k / N) | 0;
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) {
+      if (!dx && !dy) continue;
+      const nx = kx + dx, ny = ky + dy;
+      if (nx < 0 || nx > N - 1 || ny < 0 || ny > N - 1) continue;
+      const d = ny * N + nx, np = p.slice(), cap = !!p[d];
+      np[d] = null;
+      if (!attackedSet(np).has(d)) out.push({ to: d, cap, np });
+    }
+    return out;
+  }
+  const describe = (o) => (o.stay ? 'stays put' : (o.cap ? 'Kx' : 'K') + sqName(o.to));
+  function verify(seq, k0) {
+    function rec(i, k, p) {
+      const c = parse(seq[i]);
+      if (c.t === 'K') return { ok: false, why: seq[i] + ' is a king card and cannot be placed.' };
+      if (c.sq === k) return { ok: false, why: seq[i] + ' cannot be placed because the king stands on ' + sqName(k) + '.' };
+      if (p[c.sq]) return { ok: false, why: seq[i] + ' cannot be placed because ' + sqName(c.sq) + ' is taken.' };
+      const np = p.slice(); np[c.sq] = c.t;
+      const check = attackedSet(np).has(k), moves = kingMoves(k, np);
+      if (check && moves.length === 0) return { ok: true, at: i };
+      if (i === seq.length - 1) {
+        return { ok: false, why: check
+          ? seq[i] + ' gives check but the king can go to ' + moves.map((m) => sqName(m.to)).join(' or ') + '.'
+          : seq[i] + ' does not give check, so it is not mate.' };
+      }
+      const opts = check ? moves : [{ stay: true, to: k, np }].concat(moves.filter((m) => m.cap));
+      let worst = { ok: true, at: 0 };
+      for (const o of opts) {
+        const r = rec(i + 1, o.to, o.np);
+        if (!r.ok) return { ok: false, why: 'After ' + seq[i] + (check ? '+' : '') + ' the king ' + (o.stay ? 'stays put' : 'plays ' + describe(o)) + '. ' + r.why };
+        if (r.at > worst.at) worst = r;
+      }
+      return worst;
+    }
+    return rec(0, k0, new Array(N * N).fill(null));
+  }
+  // The mate as it would be played: after each card, where the king can go. The king's longest resistance is shown.
+  function mateLine(seq, k0) {
+    function rec(i, k, p) {
+      const c = parse(seq[i]), np = p.slice(); np[c.sq] = c.t;
+      const check = attackedSet(np).has(k), moves = kingMoves(k, np);
+      const step = { card: seq[i], place: np.slice(), king: k, check };
+      if (check && moves.length === 0) { step.mate = true; return [step]; }
+      if (i === seq.length - 1) return null;
+      const opts = check ? moves : [{ stay: true, to: k, np }].concat(moves.filter((m) => m.cap));
+      let best = null, bo = null;
+      for (const o of opts) {
+        const r = rec(i + 1, o.to, o.np);
+        if (!r) return null;
+        if (!best || r.length > best.length) { best = r; bo = o; }
+      }
+      step.reply = { to: bo.to, cap: !!bo.cap, stay: !!bo.stay, text: bo.stay ? 'stays put' : (bo.cap ? 'captures on ' : 'moves to ') + sqName(bo.to) };
+      step.after = bo.np.slice(); step.kingAfter = bo.to;
+      return [step].concat(best);
+    }
+    return rec(0, k0, new Array(N * N).fill(null));
+  }
+  return { N, attackedSet, kingMoves, mateLine, FILES, RANKS, sqName, parse, allCards, spareList, verify };
+};
+
+return module.exports; })()(4);
+(function () {
+'use strict';
+var $ = function (id) { return document.getElementById(id); };
+var FILES = E.FILES, RANKS = E.RANKS, GL = { X: '\u25A0', P: '\u265F', N: '\u265E', B: '\u265D', R: '\u265C', Q: '\u265B', K: '\u265A' };
+var problems = [];
+function sqName(i) { return E.sqName(i); }
+/* ---- a board, drawn from plain data ---- */
+function boardHtml(o) {
+  var h = '<div class="board' + (o.tap ? ' tap' : '') + '" role="group" aria-label="Board">';
+  h += '<div class="lab"></div>'; FILES.forEach(function (f) { h += '<div class="lab">' + f + '</div>'; });
+  for (var r = 0; r < 4; r++) {
+    h += '<div class="lab">' + RANKS[r] + '</div>';
+    for (var f = 0; f < 4; f++) {
+      var i = r * 4 + f, cls = 'sq ' + ((r + f) % 2 ? 'b' : 'a');
+      if (o.marks && o.marks[i]) cls += ' mk';
+      if (o.chk === i) cls += ' chk';
+      if (o.pick === i) cls += ' pick';
+      if (o.good === i) cls += ' good';
+      if (o.bad === i) cls += ' bad';
+      var inner = '';
+      if (o.king === i) inner = '<span class="pc k">' + GL.K + '</span>';
+      else if (o.pieces && o.pieces[i]) inner = '<span class="pc w">' + GL[o.pieces[i]] + '</span>';
+      if (o.names) inner += '<span class="nm">' + sqName(i) + '</span>';
+      h += '<div class="' + cls + '" data-sq="' + i + '"' + (o.tap ? ' role="button" tabindex="0" aria-label="' + sqName(i) + '"' : '') + '>' + inner + '</div>';
+    }
+  }
+  return h + '</div>';
+}
+function onTap(el, fn) {
+  el.addEventListener('click', function (e) { var s = e.target.closest('[data-sq]'); if (s && el.contains(s)) fn(+s.dataset.sq); });
+  el.addEventListener('keydown', function (e) { if (e.key !== 'Enter' && e.key !== ' ') return; var s = e.target.closest('[data-sq]'); if (s) { e.preventDefault(); fn(+s.dataset.sq); } });
+}
+
+/* ---- the king's answers, worked out by the game's own rules ---- */
+
+function trace(seq, k0) {
+  function rec(i, k, p) {
+    var c = E.parse(seq[i]), np = p.slice(); np[c.sq] = c.t;
+    var chk = E.attackedSet(np).has(k), mv = E.kingMoves(k, np);
+    var st = { card: seq[i], place: np.slice(), king: k, check: chk };
+    if (chk && !mv.length) { st.mate = true; return { ok: true, steps: [st] }; }
+    if (i === seq.length - 1) return { ok: false, steps: [st] };
+    var opts = chk ? mv : [{ stay: true, to: k, np: np }].concat(mv.filter(function (m) { return m.cap; }));
+    var best = null, bo = null;
+    for (var j = 0; j < opts.length; j++) {
+      var o = opts[j], r = rec(i + 1, o.to, o.np);
+      if (!r.ok) { setReply(st, o); return { ok: false, steps: [st].concat(r.steps) }; }
+      if (!best || r.steps.length > best.steps.length) { best = r; bo = o; }
+    }
+    setReply(st, bo); return { ok: true, steps: [st].concat(best.steps) };
+  }
+  function setReply(st, o) {
+    st.reply = o.stay ? 'stays put' : (o.cap ? 'eats the card on ' : 'moves to ') + (o.stay ? '' : sqName(o.to));
+    st.after = o.np.slice(); st.kingAfter = o.to; st.eat = !!o.cap;
+  }
+  return rec(0, k0, new Array(16).fill(null));
+}
+function stagesFor(seq, kingId, texts, name) {
+  var k0 = E.parse(kingId).sq, tr = trace(seq, k0), out = [{ p: new Array(16).fill(null), k: k0, chk: -1, t: '' }];
+  tr.steps.forEach(function (st) {
+    out.push({ p: st.place, k: st.king, chk: st.check ? st.king : -1, mate: st.mate });
+    if (st.reply) out.push({ p: st.after, k: st.kingAfter, chk: -1, reply: st.reply, eat: st.eat });
+  });
+  if (out.length !== texts.length) problems.push(name + ': ' + out.length + ' stages but ' + texts.length + ' texts');
+  out.forEach(function (s, i) { s.t = (texts[i] || '').replace('{reply}', s.reply || ''); });
+  out.ok = tr.ok; return out;
+}
+function stepper(el, stages, doneNote) {
+  var at = 0;
+  el.innerHTML = '<div class="bx"></div><p class="stage"></p><div class="row"><button class="btn" data-a="back" type="button">Back</button><button class="btn pri" data-a="next" type="button">Next</button><button class="btn" data-a="again" type="button">Start again</button></div>';
+  function draw() {
+    var s = stages[at];
+    el.querySelector('.bx').innerHTML = boardHtml({ pieces: s.p, king: s.k, chk: s.chk, names: false });
+    el.querySelector('.stage').textContent = s.t;
+    el.querySelector('[data-a=back]').disabled = at === 0; el.querySelector('[data-a=next]').disabled = at === stages.length - 1;
+  }
+  el.addEventListener('click', function (e) {
+    var a = e.target.dataset && e.target.dataset.a; if (!a) return;
+    if (a === 'next' && at < stages.length - 1) at++; else if (a === 'back' && at > 0) at--; else if (a === 'again') at = 0;
+    draw();
+  });
+  draw();
+}
+
+
+function autoStages(seq, kingId, name) {
+  var k0 = E.parse(kingId).sq, tr = trace(seq, k0);
+  var out = [{ p: new Array(16).fill(null), k: k0, chk: -1, t: 'The black king is on ' + sqName(k0) + '. You hold ' + seq.join(' and ') + '.' }];
+  tr.steps.forEach(function (st, i) {
+    var t = 'You place ' + st.card + '. ';
+    if (st.mate) t += 'The king is in check and has no safe square and nothing to eat. CHECKMATE!';
+    else if (st.check) t += 'The king is in check.' + (st.reply ? '' : ' But it still has a safe square, so this is not checkmate.');
+    else t += 'The king is not in check.' + (st.reply ? '' : ' So this is not checkmate.');
+    out.push({ p: st.place, k: st.king, chk: st.check ? st.king : -1, t: t });
+    if (st.reply) out.push({ p: st.after, k: st.kingAfter, chk: -1, t: 'The king ' + st.reply + '.' });
+  });
+  out.ok = tr.ok; return out;
+}
+function stepper(el, stages) {
+  var at = 0;
+  el.innerHTML = '<div class="bx"></div><p class="stage"></p><div class="row"><button class="btn" data-a="back" type="button">Back</button><button class="btn pri" data-a="next" type="button">Next</button><button class="btn" data-a="again" type="button">Start again</button></div>';
+  function draw() {
+    var s = stages[at];
+    el.querySelector('.bx').innerHTML = boardHtml({ pieces: s.p, king: s.k, chk: s.chk });
+    el.querySelector('.stage').textContent = s.t;
+    el.querySelector('[data-a=back]').disabled = at === 0; el.querySelector('[data-a=next]').disabled = at === stages.length - 1;
+  }
+  el.addEventListener('click', function (e) {
+    var a = e.target.dataset && e.target.dataset.a; if (!a) return;
+    if (a === 'next' && at < stages.length - 1) at++; else if (a === 'back' && at > 0) at--; else if (a === 'again') at = 0;
+    draw();
+  });
+  draw();
+}
+
+/* ---- chapter 2: touch a square ---- */
+(function () {
+  var box = $('b1'), pick = -1;
+  function draw() { box.innerHTML = boardHtml({ tap: true, pick: pick }); }
+  draw();
+  onTap(box, function (i) { pick = i; draw(); $('b1t').textContent = 'That is ' + sqName(i) + ': file ' + FILES[i % 4] + ', rank ' + RANKS[(i / 4) | 0] + '.'; });
+})();
+
+/* ---- chapter 3: what a piece attacks, with walls ---- */
+(function () {
+  var box = $('b3'), type = 'Q', at = 5, walls = {}, wallMode = false;
+  var info = {
+    P: 'The pawn attacks the two squares diagonally in front of it, toward rank 8. It does not attack straight ahead.',
+    N: 'The knight jumps: two squares one way, then one square sideways. Walls do not stop it.',
+    B: 'The bishop slides diagonally as far as it can, and stops at the first card in its way.',
+    R: 'The rook slides along its file and rank as far as it can, and stops at the first card in its way.',
+    Q: 'The queen slides like a rook and a bishop together. She is the strongest piece.'
+  };
+  var names = { P: 'Pawn', N: 'Knight', B: 'Bishop', R: 'Rook', Q: 'Queen' }, row = $('pickrow');
+  'PNBRQ'.split('').forEach(function (t) {
+    var b = document.createElement('button'); b.className = 'btn'; b.type = 'button'; b.dataset.t = t; b.textContent = names[t];
+    b.addEventListener('click', function () { type = t; draw(); }); row.appendChild(b);
+  });
+  function draw() {
+    var p = new Array(16).fill(null); Object.keys(walls).forEach(function (k) { p[k] = 'X'; }); p[at] = type;
+    var s = E.attackedSet(p), marks = {}; s.forEach(function (i) { marks[i] = true; });
+    delete marks[at];
+    box.innerHTML = boardHtml({ tap: true, pieces: p, marks: marks });
+    Array.prototype.forEach.call(row.children, function (b) { b.classList.toggle('on', b.dataset.t === type); });
+    $('wallbtn').textContent = 'Add walls: ' + (wallMode ? 'on' : 'off'); $('wallbtn').classList.toggle('on', wallMode);
+    $('b3t').textContent = names[type] + ' on ' + sqName(at) + '. ' + info[type];
+  }
+  onTap(box, function (i) { if (wallMode) { if (i === at) return; if (walls[i]) delete walls[i]; else walls[i] = true; } else { at = i; delete walls[i]; } draw(); });
+  $('wallbtn').addEventListener('click', function () { wallMode = !wallMode; draw(); });
+  draw();
+})();
+
+/* ---- chapter 4 and 6: worked examples ---- */
+stepper($('s1'), autoStages(['Qh6', 'Qg7'], 'Kh8'));
+stepper($('s2'), autoStages(['Pf6', 'Qg7'], 'Kh8'));
+stepper($('s3'), autoStages(['Qg7', 'Qh6'], 'Kh8'));
+var annS = autoStages(['Qh6', 'Qg7'], 'Kf6'), benS = autoStages(['Qh5', 'Qf7'], 'Kf6');
+stepper($('s4'), annS); stepper($('s5'), benS);
+if (annS.ok || !benS.ok || !autoStages(['Qh6', 'Qg7'], 'Kh8').ok || autoStages(['Qg7', 'Qh6'], 'Kh8').ok || !autoStages(['Pf6', 'Qg7'], 'Kh8').ok) problems.push('worked examples disagree with the rules');
+
+/* ---- chapter 7: puzzles ---- */
+(function () {
+  var P = [
+    { k: 'Kh8', hand: ['Ng7', 'Re7', 'Nh6', 'Re8'], sol: ['Re7', 'Re8'], hint: 'Two rooks work as a team. One rook covers the squares below the king without giving check. The other then gives check along the top row.', why: 'Re7 quietly covers the whole 7th rank, so the king cannot step down. Then Re8 checks along rank 8, and the king has no square left.' },
+    { k: 'Kh7', hand: ['Rg8', 'Nf6', 'Be5', 'Qg7'], sol: ['Be5', 'Qg7'], hint: 'The queen can give a very strong check next to the king, but she needs a guard first.', why: 'The bishop on e5 attacks g7 along the diagonal. So when Qg7 arrives, the king cannot eat her, and she covers every escape.' },
+    { k: 'Kh8', hand: ['Qh6', 'Rh5', 'Nf6', 'Ng6'], sol: ['Nf6', 'Qh6'], hint: 'A knight can cover escape squares quietly. Place the quiet card first, the check second.', why: 'Nf6 attacks g8 and h7, the king\'s escape squares, without giving check. Then Qh6 checks along the h file and also covers g7.' }
+  ];
+  var el = $('pz'), at = 0, pick = [];
+  P.forEach(function (q, i) { var r = E.verify(q.sol, E.parse(q.k).sq); if (!r.ok) problems.push('puzzle ' + i + ' has no mate'); });
+  function draw() {
+    if (at >= P.length) { el.innerHTML = '<p class="stage">That was the last puzzle. You can now spot a quiet card, a guard and a check.</p><div class="row"><button class="btn" id="pzr" type="button">Do them again</button></div>'; $('pzr').addEventListener('click', function () { at = 0; pick = []; draw(); }); return; }
+    var q = P[at], k0 = E.parse(q.k).sq;
+    el.innerHTML = '<p class="stage">Puzzle ' + (at + 1) + ' of ' + P.length + '. The king is on ' + q.k.slice(1) + '. Pick two cards, in order.</p><div id="pzb"></div><div class="cards" id="pzh" style="margin:12px 0"></div><div class="row"><button class="btn pri" id="pzgo" type="button">Reveal</button><button class="btn" id="pzclr" type="button">Clear</button><button class="btn" id="pzhint" type="button">Hint</button></div><p class="stage" id="pzmsg"></p><div id="pzres"></div>';
+    $('pzb').innerHTML = boardHtml({ king: k0 });
+    var h = $('pzh');
+    q.hand.forEach(function (c) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.dataset.c = c; b.setAttribute('aria-pressed', 'false');
+      b.innerHTML = '<span class="g w">' + GL[c[0]] + '</span><span class="i">' + c + '</span>'; h.appendChild(b);
+    });
+    function sync() { Array.prototype.forEach.call(h.children, function (b) { var n = pick.indexOf(b.dataset.c); b.classList.toggle('sel', n >= 0); var o = b.querySelector('.o'); if (o) o.remove(); if (n >= 0) b.insertAdjacentHTML('beforeend', '<span class="o">' + (n + 1) + '</span>'); b.setAttribute('aria-pressed', n >= 0 ? 'true' : 'false'); }); $('pzgo').disabled = pick.length !== 2; }
+    h.addEventListener('click', function (e) { var b = e.target.closest('.card'); if (!b) return; var c = b.dataset.c, n = pick.indexOf(c); if (n >= 0) pick.splice(n, 1); else if (pick.length < 2) pick.push(c); $('pzres').innerHTML = ''; $('pzmsg').textContent = ''; sync(); });
+    $('pzclr').addEventListener('click', function () { pick = []; $('pzres').innerHTML = ''; $('pzmsg').textContent = ''; sync(); });
+    $('pzhint').addEventListener('click', function () { $('pzmsg').textContent = 'Hint: ' + q.hint; });
+    $('pzgo').addEventListener('click', function () {
+      var r = E.verify(pick, k0), st = autoStages(pick, q.k);
+      $('pzmsg').innerHTML = r.ok ? '<span class="ok">Checkmate! </span>' + q.why : '<span class="no">Not checkmate. </span>Watch what the king does, then try again.';
+      var res = $('pzres'); res.innerHTML = ''; stepper(res, st);
+      if (r.ok) { var nb = document.createElement('button'); nb.className = 'btn pri'; nb.type = 'button'; nb.style.marginTop = '10px'; nb.textContent = at === P.length - 1 ? 'Finish' : 'Next puzzle'; nb.addEventListener('click', function () { at++; pick = []; draw(); }); res.appendChild(nb); }
+    });
+    sync();
+  }
+  draw();
+})();
+window.__problems = problems;
+})();
+
+</script>
+</body>
+</html>
